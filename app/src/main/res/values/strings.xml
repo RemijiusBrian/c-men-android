@@ -6,6 +6,10 @@
     <string name="destination_chats">Chats</string>
     <string name="destination_messages">Messages</string>
 
+    <!-- Content Description -->
+    <string name="content_password_visibility_toggle">Toggle Password Visibility</string>
+    <string name="content_error">Error</string>
+
     <!-- Texts -->
     <string name="login">Login</string>
     <string name="username">Username</string>

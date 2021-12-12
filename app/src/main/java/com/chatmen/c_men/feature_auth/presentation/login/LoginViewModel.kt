@@ -34,8 +34,13 @@ class LoginViewModel @Inject constructor(
     private fun onUsernameChange(value: String) {
         savedStateHandle.set(SavedStateKeys.USERNAME, value)
         _usernameState.value = usernameState.value.copy(
-            text = value
+            text = value,
         )
+        if (usernameState.value.error != null) {
+            _usernameState.value = usernameState.value.copy(
+                error = null
+            )
+        }
     }
 
     // Password
@@ -50,6 +55,11 @@ class LoginViewModel @Inject constructor(
         _passwordState.value = passwordState.value.copy(
             text = value
         )
+        if (passwordState.value.error != null) {
+            _usernameState.value = usernameState.value.copy(
+                error = null
+            )
+        }
     }
 
     // Ui Events

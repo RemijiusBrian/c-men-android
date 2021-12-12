@@ -14,6 +14,7 @@ import androidx.compose.ui.res.stringResource
 import com.chatmen.c_men.R
 import com.chatmen.c_men.core.domain.states.TextInputState
 import com.chatmen.c_men.core.domain.util.InputError
+import com.chatmen.c_men.core.presentation.components.PasswordField
 import com.chatmen.c_men.core.presentation.components.TextInput
 import com.chatmen.c_men.core.presentation.ui.theme.SpaceSmall
 import com.chatmen.c_men.core.presentation.util.BasicUiEvent
@@ -64,7 +65,7 @@ fun Login(
                 labelRes = R.string.username
             )
             Spacer(modifier = Modifier.height(SpaceSmall))
-            TextInput(
+            PasswordField(
                 value = passwordState.text,
                 onValueChange = { onEvent(LoginEvent.PasswordChange(it)) },
                 error = when (usernameState.error) {
