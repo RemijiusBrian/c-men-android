@@ -4,6 +4,8 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import com.chatmen.c_men.CMenDatabase
+import com.chatmen.c_men.core.data.util.dispatcher_provider.DispatcherProvider
+import com.chatmen.c_men.core.data.util.dispatcher_provider.DispatcherProviderImpl
 import com.chatmen.c_men.core.util.Constants
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import com.squareup.sqldelight.db.SqlDriver
@@ -63,4 +65,8 @@ object AppModule {
     @Singleton
     @Provides
     fun provideCMenDatabase(driver: AndroidSqliteDriver): CMenDatabase = CMenDatabase(driver)
+
+    @Singleton
+    @Provides
+    fun provideDispatchers(): DispatcherProvider = DispatcherProviderImpl()
 }

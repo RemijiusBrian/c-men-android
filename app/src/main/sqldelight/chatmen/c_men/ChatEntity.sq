@@ -1,0 +1,29 @@
+CREATE TABLE ChatEntitiy (
+    id TEXT PRIMARY KEY,
+    name TEXT,
+    description TEXT,
+    timestamp INTEGER NOT NULL,
+    chatIconUrl TEXT,
+    lastMessage TEXT
+);
+
+getAllChats:
+SELECT *
+FROM ChatEntitiy;
+
+insert:
+INSERT OR REPLACE
+INTO ChatEntitiy
+VALUES (?, ?, ?, ?, ?, ?);
+
+updateLastMessageForChat:
+UPDATE ChatEntitiy
+SET lastMessage = :lastMessage
+WHERE id = :id;
+
+deleteById:
+DELETE FROM ChatEntitiy
+WHERE id = :id;
+
+deleteAll:
+DELETE FROM ChatEntitiy;

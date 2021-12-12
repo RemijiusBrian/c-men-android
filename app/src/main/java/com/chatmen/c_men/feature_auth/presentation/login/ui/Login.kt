@@ -41,7 +41,7 @@ fun Login(
                 }
 
                 is UiEvent.Navigate -> {
-                    // navigate(event.destination)
+                    navigate(event.destination)
                 }
             }
         }
