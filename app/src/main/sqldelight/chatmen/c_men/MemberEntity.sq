@@ -1,0 +1,18 @@
+CREATE TABLE MemberEntity (
+    username TEXT PRIMARY KEY,
+    name TEXT,
+    bio TEXT
+);
+
+getMemberByUsername:
+SELECT *
+FROM MemberEntity
+WHERE username = :username;
+
+insert:
+INSERT OR REPLACE
+INTO MemberEntity
+VALUES (?, ?, ?);
+
+deleteAll:
+DELETE FROM MemberEntity;
