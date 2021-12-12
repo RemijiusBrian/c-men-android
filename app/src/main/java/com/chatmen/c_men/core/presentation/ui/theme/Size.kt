@@ -1,4 +1,4 @@
-package com.chatmen.c_men.ui.theme
+package com.chatmen.c_men.core.presentation.ui.theme
 
 import androidx.compose.ui.unit.dp
 

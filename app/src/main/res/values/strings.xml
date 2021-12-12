@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">C-Men</string>
+
+    <!-- Destinations -->
+    <string name="destination_login">Login</string>
+    <string name="destination_chats">Chats</string>
+    <string name="destination_messages">Messages</string>
+
+    <!-- Error -->
+    <string name="error_unknown">An unknown error occurred</string>
+    <string name="error_server_not_reached">Couldn\'t reach server</string>
+    <string name="error_something_went_wrong">Oops… Something went wrong.</string>
 </resources>

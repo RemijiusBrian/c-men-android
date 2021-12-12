@@ -4,7 +4,7 @@ import com.chatmen.c_men.feature_auth.domain.model.LoginResult
 import com.chatmen.c_men.feature_auth.domain.repository.AuthRepository
 import com.chatmen.c_men.feature_auth.presentation.util.AuthError
 
-class LoginUserUseCase(
+class LoginUseCase(
     private val repository: AuthRepository
 ) {
     suspend operator fun invoke(username: String, password: String): LoginResult {

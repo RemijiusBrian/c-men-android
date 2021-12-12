@@ -1,23 +1,39 @@
 package com.chatmen.c_men.di
 
+import android.content.SharedPreferences
 import com.chatmen.c_men.feature_auth.data.remote.AuthService
+import com.chatmen.c_men.feature_auth.data.repository.AuthRepositoryImpl
+import com.chatmen.c_men.feature_auth.domain.repository.AuthRepository
+import com.chatmen.c_men.feature_auth.domain.use_case.AuthenticateUseCase
+import com.chatmen.c_men.feature_auth.domain.use_case.LoginUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.features.*
-import io.ktor.client.features.json.*
-import io.ktor.client.features.logging.*
-import io.ktor.client.features.websocket.*
-import io.ktor.http.*
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object ServiceModule {
+object AuthModule {
 
+    @Singleton
     @Provides
     fun provideAuthService(client: HttpClient): AuthService = AuthService.create(client)
+
+    @Singleton
+    @Provides
+    fun provideAuthRepository(
+        authService: AuthService,
+        sharedPreferences: SharedPreferences
+    ): AuthRepository = AuthRepositoryImpl(authService, sharedPreferences)
+
+    @Singleton
+    @Provides
+    fun providesLoginUseCase(repository: AuthRepository): LoginUseCase = LoginUseCase(repository)
+
+    @Singleton
+    @Provides
+    fun provideAuthenticateUseCase(repository: AuthRepository): AuthenticateUseCase =
+        AuthenticateUseCase(repository)
 }

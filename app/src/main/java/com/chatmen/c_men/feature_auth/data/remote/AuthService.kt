@@ -1,8 +1,9 @@
-package com.chatmen.feature_auth.data.remote
+package com.chatmen.c_men.feature_auth.data.remote
 
 import com.chatmen.c_men.core.data.remote.dto.response.BasicApiResponse
-import com.chatmen.feature_auth.data.remote.reponse.AuthResponse
-import com.chatmen.feature_auth.data.remote.request.LoginRequest
+import com.chatmen.c_men.core.data.util.HttpRoutes
+import com.chatmen.c_men.feature_auth.data.remote.reponse.AuthResponse
+import com.chatmen.c_men.feature_auth.data.remote.request.LoginRequest
 import io.ktor.client.*
 
 interface AuthService {
@@ -13,5 +14,10 @@ interface AuthService {
 
     companion object {
         fun create(client: HttpClient): AuthService = AuthServiceImpl(client)
+    }
+
+    sealed class Endpoints(val endpoint: String) {
+        object Authenticate : Endpoints("${HttpRoutes.BASE_URL}member/authenticate")
+        object Login : Endpoints("${HttpRoutes.BASE_URL}member/login")
     }
 }
