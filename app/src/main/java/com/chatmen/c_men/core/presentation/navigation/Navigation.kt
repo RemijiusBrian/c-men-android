@@ -2,8 +2,11 @@ package com.chatmen.c_men.core.presentation.navigation
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import com.chatmen.c_men.feature_auth.presentation.login.LoginViewModel
+import com.chatmen.c_men.feature_auth.presentation.login.ui.Login
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 
@@ -19,6 +22,23 @@ fun Navigation(navController: NavHostController) {
 @ExperimentalAnimationApi
 private fun NavGraphBuilder.loginDestination(navController: NavHostController) {
     composable(Destination.Login.route) {
+        val viewModel: LoginViewModel = hiltViewModel()
+
+        Login(
+            usernameState = viewModel.usernameState.value,
+            passwordState = viewModel.passwordState.value,
+            onEvent = viewModel::onEvent,
+            eventsFlow = viewModel.events,
+            navigate = navController::navigate
+        )
+    }
+}
+
+@ExperimentalAnimationApi
+private fun NavGraphBuilder.chatsDestination(navController: NavHostController) {
+    composable(
+        route = Destination.Chats.route,
+    ) {
 
     }
 }

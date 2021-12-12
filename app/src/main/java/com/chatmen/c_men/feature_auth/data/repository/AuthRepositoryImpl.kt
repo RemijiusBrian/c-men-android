@@ -32,7 +32,7 @@ class AuthRepositoryImpl(
             val request = LoginRequest(username, password)
             val response = service.loginUser(request)
 
-            if (response.success) {
+            if (response.successful) {
                 response.data?.let { authResponse ->
                     sharedPreferences.edit()
                         .putString(Constants.USERNAME_KEY, authResponse.username)

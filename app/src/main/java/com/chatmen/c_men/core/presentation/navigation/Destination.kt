@@ -17,7 +17,7 @@ sealed class Destination(
         titleRes = R.string.destination_login
     )
 
-    object Chat : Destination(
+    object Chats : Destination(
         route = NavRoutes.CHATS,
         titleRes = R.string.destination_chats
     )

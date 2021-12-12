@@ -6,8 +6,14 @@
     <string name="destination_chats">Chats</string>
     <string name="destination_messages">Messages</string>
 
+    <!-- Texts -->
+    <string name="login">Login</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+
     <!-- Error -->
     <string name="error_unknown">An unknown error occurred</string>
     <string name="error_server_not_reached">Couldn\'t reach server</string>
     <string name="error_something_went_wrong">Oops… Something went wrong.</string>
+    <string name="error_field_empty">Field cannot be empty</string>
 </resources>

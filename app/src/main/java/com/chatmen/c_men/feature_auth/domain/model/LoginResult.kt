@@ -1,10 +1,10 @@
 package com.chatmen.c_men.feature_auth.domain.model
 
 import com.chatmen.c_men.core.data.util.SimpleResponse
-import com.chatmen.c_men.core.domain.util.BaseError
+import com.chatmen.c_men.core.domain.util.BasicError
 
 data class LoginResult(
-    val usernameError: BaseError? = null,
-    val passwordError: BaseError? = null,
-    val result: SimpleResponse? = null
+    val usernameError: BasicError? = null,
+    val passwordError: BasicError? = null,
+    val response: SimpleResponse? = null
 )
