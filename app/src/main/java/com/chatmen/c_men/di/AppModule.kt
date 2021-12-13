@@ -8,7 +8,6 @@ import com.chatmen.c_men.core.data.util.dispatcher_provider.DispatcherProvider
 import com.chatmen.c_men.core.data.util.dispatcher_provider.DispatcherProviderImpl
 import com.chatmen.c_men.core.util.Constants
 import com.squareup.sqldelight.android.AndroidSqliteDriver
-import com.squareup.sqldelight.db.SqlDriver
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -56,7 +55,7 @@ object AppModule {
     }
 
     @Provides
-    fun provideSqlDelightDriver(app: Application): SqlDriver = AndroidSqliteDriver(
+    fun provideSqlDelightDriver(app: Application): AndroidSqliteDriver = AndroidSqliteDriver(
         schema = CMenDatabase.Schema,
         context = app,
         name = Constants.DATABASE_NAME

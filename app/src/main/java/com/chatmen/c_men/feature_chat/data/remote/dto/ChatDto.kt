@@ -4,7 +4,7 @@ import chatmen.cmen.ChatEntitiy
 
 data class ChatDto(
     val chatId: String,
-    val name: String?,
+    val name: String,
     val description: String?,
     val timestamp: Long,
     val chatIconUrl: String?,

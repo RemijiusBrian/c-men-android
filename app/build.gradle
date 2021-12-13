@@ -89,7 +89,7 @@ dependencies {
     def accompanist_version = "0.21.4-beta"
     implementation("com.google.accompanist:accompanist-navigation-animation:$accompanist_version")
     implementation("com.google.accompanist:accompanist-swiperefresh:$accompanist_version")
-    implementation("com.google.accompanist:accompanist-placeholder:$accompanist_version")
+    implementation("com.google.accompanist:accompanist-placeholder-material:$accompanist_version")
 
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")

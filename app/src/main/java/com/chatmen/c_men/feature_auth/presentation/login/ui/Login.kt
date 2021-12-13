@@ -1,8 +1,6 @@
 package com.chatmen.c_men.feature_auth.presentation.login.ui
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -14,6 +12,7 @@ import androidx.compose.ui.res.stringResource
 import com.chatmen.c_men.R
 import com.chatmen.c_men.core.domain.states.TextInputState
 import com.chatmen.c_men.core.domain.util.InputError
+import com.chatmen.c_men.core.presentation.components.LoadingIndicatorButton
 import com.chatmen.c_men.core.presentation.components.PasswordField
 import com.chatmen.c_men.core.presentation.components.TextInput
 import com.chatmen.c_men.core.presentation.ui.theme.SpaceSmall
@@ -25,6 +24,7 @@ import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun Login(
+    isLoading: Boolean,
     usernameState: TextInputState,
     passwordState: TextInputState,
     onEvent: (LoginEvent) -> Unit,
@@ -75,12 +75,12 @@ fun Login(
                 labelRes = R.string.password
             )
             Spacer(modifier = Modifier.height(SpaceSmall))
-            Button(
+            LoadingIndicatorButton(
                 onClick = { onEvent(LoginEvent.Login) },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(text = stringResource(id = R.string.login))
-            }
+                modifier = Modifier.fillMaxWidth(),
+                text = R.string.login,
+                isLoading = isLoading
+            )
         }
     }
 }

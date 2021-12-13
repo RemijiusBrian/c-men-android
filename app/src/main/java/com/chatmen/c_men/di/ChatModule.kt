@@ -7,6 +7,8 @@ import com.chatmen.c_men.feature_chat.data.local.ChatDataSourceImpl
 import com.chatmen.c_men.feature_chat.data.remote.ChatService
 import com.chatmen.c_men.feature_chat.data.repository.ChatRepositoryImpl
 import com.chatmen.c_men.feature_chat.domain.repository.ChatRepository
+import com.chatmen.c_men.feature_chat.domain.use_case.ChatUseCases
+import com.chatmen.c_men.feature_chat.domain.use_case.GetChatsUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,4 +37,10 @@ object ChatModule {
         dataSource: ChatDataSource,
         service: ChatService
     ): ChatRepository = ChatRepositoryImpl(dataSource, service)
+
+    @Singleton
+    @Provides
+    fun provideChatUseCases(repository: ChatRepository): ChatUseCases = ChatUseCases(
+        getChats = GetChatsUseCase(repository)
+    )
 }

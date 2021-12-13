@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 inline fun <RequestType, ResultType> networkBoundResource(
     crossinline query: () -> Flow<RequestType>,
     crossinline fetch: suspend () -> ResultType,
-    crossinline saveFetchData: suspend (ResultType) -> Unit,
+    crossinline saveFetchResult: suspend (ResultType) -> Unit,
     crossinline shouldFetch: (RequestType) -> Boolean = { true }
 ): Flow<Resource<RequestType>> = channelFlow {
     val data = query().first()
@@ -21,7 +21,7 @@ inline fun <RequestType, ResultType> networkBoundResource(
         }
 
         try {
-            saveFetchData(fetch())
+            saveFetchResult(fetch())
             loading.cancel()
             query().collect { send(Resource.Success(it)) }
         } catch (t: Throwable) {

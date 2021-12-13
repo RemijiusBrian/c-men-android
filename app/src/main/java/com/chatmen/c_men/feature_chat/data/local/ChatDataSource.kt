@@ -9,7 +9,7 @@ interface ChatDataSource {
 
     suspend fun insert(
         id: String,
-        name: String?,
+        name: String,
         description: String?,
         timestamp: Long,
         chatIconUrl: String?,

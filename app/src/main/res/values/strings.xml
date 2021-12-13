@@ -5,10 +5,12 @@
     <string name="destination_login">Login</string>
     <string name="destination_chats">Chats</string>
     <string name="destination_messages">Messages</string>
+    <string name="destination_members">Members</string>
 
     <!-- Content Description -->
     <string name="content_password_visibility_toggle">Toggle Password Visibility</string>
     <string name="content_error">Error</string>
+    <string name="content_new_chat">New Chat</string>
 
     <!-- Texts -->
     <string name="login">Login</string>

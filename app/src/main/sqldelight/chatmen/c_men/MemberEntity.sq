@@ -1,8 +1,14 @@
 CREATE TABLE MemberEntity (
     username TEXT PRIMARY KEY,
-    name TEXT,
-    bio TEXT
+    name TEXT NOT NULL,
+    bio TEXT,
+    profilePictureUrl TEXT
 );
+
+getAllMembers:
+SELECT *
+FROM MemberEntity
+ORDER BY name ASC;
 
 getMemberByUsername:
 SELECT *
@@ -12,7 +18,7 @@ WHERE username = :username;
 insert:
 INSERT OR REPLACE
 INTO MemberEntity
-VALUES (?, ?, ?);
+VALUES (?, ?, ?, ?);
 
 deleteAll:
 DELETE FROM MemberEntity;

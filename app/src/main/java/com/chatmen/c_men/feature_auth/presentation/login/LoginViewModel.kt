@@ -24,6 +24,10 @@ class LoginViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
+    // Loading
+    private val _isLoading = mutableStateOf(false)
+    val isLoading: State<Boolean> = _isLoading
+
     // Username
     private val _usernameState = mutableStateOf(
         TextInputState(
@@ -83,13 +87,13 @@ class LoginViewModel @Inject constructor(
 
     // Login User
     private fun loginUser(username: String, password: String) = viewModelScope.launch {
+        _isLoading.value = true
         val result = login(username, password)
 
         result.usernameError?.let { _usernameState.value = usernameState.value.copy(error = it) }
         result.passwordError?.let { _passwordState.value = passwordState.value.copy(error = it) }
 
         result.response?.let { response ->
-            println("AppDebug: Login Response $response")
             when (response) {
                 is Response.Error -> {
                     _events.send(
@@ -101,6 +105,7 @@ class LoginViewModel @Inject constructor(
                 }
             }
         }
+        _isLoading.value = false
     }
 
     // Saved State Keys

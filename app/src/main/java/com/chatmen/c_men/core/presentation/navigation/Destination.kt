@@ -34,6 +34,11 @@ sealed class Destination(
         )
     )
 
+    object Members : Destination(
+        route = NavRoutes.MEMBERS,
+        titleRes = R.string.destination_members
+    )
+
     fun withArgs(vararg args: String): String = buildString {
         append(route)
         args.forEach { arg ->
@@ -46,4 +51,5 @@ private object NavRoutes {
     const val LOGIN = "login"
     const val CHATS = "chats"
     const val MESSAGES = "messages"
+    const val MEMBERS = "members"
 }
