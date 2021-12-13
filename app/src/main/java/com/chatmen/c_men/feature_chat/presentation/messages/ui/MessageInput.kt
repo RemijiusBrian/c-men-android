@@ -3,9 +3,7 @@ package com.chatmen.c_men.feature_chat.presentation.messages.ui
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -19,7 +17,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.chatmen.c_men.R
 import com.chatmen.c_men.core.presentation.ui.theme.CMenTheme
-import com.chatmen.c_men.core.presentation.ui.theme.PaddingExtraSmall
+import com.chatmen.c_men.core.presentation.ui.theme.PaddingMedium
+import com.chatmen.c_men.core.presentation.ui.theme.PaddingSmall
+import com.chatmen.c_men.core.presentation.ui.theme.SpaceSmall
 
 @Composable
 fun MessageInput(
@@ -30,8 +30,9 @@ fun MessageInput(
     onSend: () -> Unit
 ) {
     Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
+        modifier = modifier
+            .padding(horizontal = PaddingMedium, vertical = PaddingSmall),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         OutlinedTextField(
             value = messageInput,
@@ -40,23 +41,23 @@ fun MessageInput(
                 focusedBorderColor = Color.Transparent,
                 unfocusedBorderColor = Color.Transparent,
                 disabledBorderColor = Color.Transparent,
-                backgroundColor = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.disabled)
+                backgroundColor = MaterialTheme.colors.onSurface.copy(alpha = 0.16f)
             ),
             shape = CircleShape,
             modifier = Modifier
                 .heightIn(
                     min = TextFieldDefaults.MinHeight,
-                    max = TextFieldDefaults.MinHeight * 3
+                    max = TextFieldDefaults.MinHeight * 2
                 )
-                .weight(1f)
-                .padding(PaddingExtraSmall),
-            placeholder = { placeHolder?.let { Text(text = stringResource(id = it)) } }
+                .weight(1f),
+            placeholder = { placeHolder?.let { Text(text = stringResource(id = it)) } },
+            maxLines = 2
         )
+        Spacer(modifier = Modifier.width(SpaceSmall))
         AnimatedVisibility(visible = messageInput.isNotEmpty()) {
             IconButton(
                 onClick = onSend,
                 modifier = Modifier
-                    .padding(PaddingExtraSmall)
                     .clip(CircleShape)
                     .background(color = MaterialTheme.colors.primary, shape = CircleShape)
             ) {

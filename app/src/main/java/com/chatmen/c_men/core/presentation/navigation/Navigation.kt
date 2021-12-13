@@ -11,10 +11,10 @@ import com.chatmen.c_men.feature_auth.presentation.login.LoginViewModel
 import com.chatmen.c_men.feature_auth.presentation.login.ui.Login
 import com.chatmen.c_men.feature_auth.presentation.splash_screen.SplashScreenViewModel
 import com.chatmen.c_men.feature_auth.presentation.splash_screen.ui.SplashScreen
-import com.chatmen.c_men.feature_chat.presentation.messages.MessagesViewModel
-import com.chatmen.c_men.feature_chat.presentation.messages.ui.Messages
 import com.chatmen.c_men.feature_chat.presentation.chats_list.ChatViewModel
 import com.chatmen.c_men.feature_chat.presentation.chats_list.ui.Chats
+import com.chatmen.c_men.feature_chat.presentation.messages.MessagesViewModel
+import com.chatmen.c_men.feature_chat.presentation.messages.ui.Messages
 import com.chatmen.c_men.feature_members.presentation.members_list.MembersViewModel
 import com.chatmen.c_men.feature_members.presentation.members_list.ui.Members
 import com.google.accompanist.navigation.animation.AnimatedNavHost
@@ -112,10 +112,10 @@ private fun NavGraphBuilder.membersDestination(navController: NavHostController)
 @ExperimentalAnimationApi
 private fun NavGraphBuilder.messagesDestination(navController: NavHostController) {
     composable(
-        route = Destination.Messages.route,
+        route = Destination.Messages.route + "/{${NavArgs.CHAT_ID}}",
         arguments = Destination.Messages.arguments,
-        enterTransition = { NavAnimations.slideInFromLeftWithFadeIn() },
-        popExitTransition = { NavAnimations.slideOutToLeftWithFadeOut() }
+        enterTransition = { NavAnimations.slideInFromRightWithFadeIn() },
+        popExitTransition = { NavAnimations.slideOutToRightWithFadeOut() }
     ) {
         val viewModel: MessagesViewModel = hiltViewModel()
 
