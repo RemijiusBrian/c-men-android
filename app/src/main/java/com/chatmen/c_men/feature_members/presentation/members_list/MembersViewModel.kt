@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.chatmen.c_men.core.data.util.Resource
 import com.chatmen.c_men.core.domain.util.Refresh
 import com.chatmen.c_men.core.presentation.util.BasicUiEvent
-import com.chatmen.c_men.feature_members.domain.use_case.GetMembersUseCase
+import com.chatmen.c_men.feature_members.domain.use_case.MembersUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.flatMapLatest
@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MembersViewModel @Inject constructor(
-    private val getMembers: GetMembersUseCase
+    private val useCases: MembersUseCases,
 ) : ViewModel() {
 
     // Refresh Trigger
@@ -56,25 +56,25 @@ class MembersViewModel @Inject constructor(
     // Collect Members
     private fun collectMembers() {
         refresh.flatMapLatest { refresh ->
-            getMembers(refresh)
+            useCases.getMembers(refresh)
         }.onEach { resource ->
             when (resource) {
                 is Resource.Error -> {
                     _state.value = state.value.copy(
                         isLoading = false,
-                        members = resource.data.orEmpty()
+                        members = useCases.groupMembers(resource.data)
                     )
                 }
                 is Resource.Loading -> {
                     _state.value = state.value.copy(
                         isLoading = true,
-                        members = resource.data.orEmpty()
+                        members = useCases.groupMembers(resource.data)
                     )
                 }
                 is Resource.Success -> {
                     _state.value = state.value.copy(
                         isLoading = false,
-                        members = resource.data.orEmpty()
+                        members = useCases.groupMembers(resource.data)
                     )
                 }
             }

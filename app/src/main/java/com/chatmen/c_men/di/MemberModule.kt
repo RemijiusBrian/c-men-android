@@ -8,6 +8,8 @@ import com.chatmen.c_men.feature_members.data.remote.MemberService
 import com.chatmen.c_men.feature_members.data.repository.MemberRepositoryImpl
 import com.chatmen.c_men.feature_members.domain.repository.MemberRepository
 import com.chatmen.c_men.feature_members.domain.use_case.GetMembersUseCase
+import com.chatmen.c_men.feature_members.domain.use_case.GroupMembersUseCase
+import com.chatmen.c_men.feature_members.domain.use_case.MembersUseCases
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -39,6 +41,9 @@ object MemberModule {
 
     @Singleton
     @Provides
-    fun provideGetMemberUseCase(repository: MemberRepository): GetMembersUseCase =
-        GetMembersUseCase(repository)
+    fun provideMembersUseCases(repository: MemberRepository): MembersUseCases =
+        MembersUseCases(
+            getMembers = GetMembersUseCase(repository),
+            groupMembers = GroupMembersUseCase()
+        )
 }

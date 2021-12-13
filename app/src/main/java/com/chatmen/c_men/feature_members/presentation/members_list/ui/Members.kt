@@ -43,16 +43,25 @@ fun Members(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        items(state.members) { member ->
-            MemberItem(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .animateItemPlacement(),
-                name = member.name,
-                bio = member.bio,
-                profilePictureUrl = member.profilePictureUrl,
-                onClick = { onEvent(MembersEvent.MemberClick(member.username)) }
-            )
+        state.members.forEach { (separator, members) ->
+            item {
+                MemberSeparator(
+                    separator = separator,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
+            }
+            items(items = members) { member ->
+                MemberItem(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .animateItemPlacement(),
+                    name = member.name,
+                    bio = member.bio,
+                    profilePictureUrl = member.profilePictureUrl,
+                    onClick = { onEvent(MembersEvent.MemberClick(member.username)) }
+                )
+            }
         }
     }
 }
