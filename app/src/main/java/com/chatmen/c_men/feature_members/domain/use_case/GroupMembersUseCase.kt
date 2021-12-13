@@ -4,5 +4,5 @@ import com.chatmen.c_men.feature_members.domain.model.Member
 
 class GroupMembersUseCase {
     operator fun invoke(members: List<Member>?): Map<String, List<Member>> =
-        members?.groupBy { it.name[0].uppercase() } ?: emptyMap()
+        members?.groupBy { it.username[0].uppercase() } ?: emptyMap()
 }

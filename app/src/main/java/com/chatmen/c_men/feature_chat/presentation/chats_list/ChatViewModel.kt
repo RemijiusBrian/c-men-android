@@ -9,6 +9,7 @@ import com.chatmen.c_men.core.domain.util.Refresh
 import com.chatmen.c_men.core.presentation.navigation.Destination
 import com.chatmen.c_men.core.presentation.util.BasicUiEvent
 import com.chatmen.c_men.core.presentation.util.UiEvent
+import com.chatmen.c_men.core.presentation.util.UiText
 import com.chatmen.c_men.feature_chat.domain.use_case.ChatUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -37,9 +38,7 @@ class ChatViewModel @Inject constructor(
     val events = _events.receiveAsFlow()
 
     init {
-        viewModelScope.launch {
-            _refresh.send(Refresh.NORMAL)
-        }
+        viewModelScope.launch { _refresh.send(Refresh.NORMAL) }
         onEvent(ChatEvent.InitState)
     }
 
@@ -54,6 +53,18 @@ class ChatViewModel @Inject constructor(
                     _events.send(UiEvent.Navigate(Destination.Members.route))
                 }
             }
+            ChatEvent.Refresh -> {
+                refresh()
+            }
+            is ChatEvent.ChatClick -> {
+                viewModelScope.launch {
+                    _events.send(
+                        UiEvent.Navigate(
+                            Destination.Messages.withArgs(event.chatId)
+                        )
+                    )
+                }
+            }
         }
     }
 
@@ -64,17 +75,38 @@ class ChatViewModel @Inject constructor(
         }.onEach { resource ->
             when (resource) {
                 is Resource.Error -> {
-
+                    _events.send(
+                        UiEvent.ShowSnackbar(resource.message ?: UiText.unknownError())
+                    )
+                    _state.value = state.value.copy(
+                        chats = resource.data.orEmpty(),
+                        refreshState = state.value.refreshState.apply {
+                            isRefreshing = false
+                        }
+                    )
                 }
                 is Resource.Loading -> {
-
+                    _state.value = state.value.copy(
+                        chats = resource.data.orEmpty(),
+                        refreshState = state.value.refreshState.apply {
+                            isRefreshing = true
+                        }
+                    )
                 }
                 is Resource.Success -> {
                     _state.value = state.value.copy(
-                        chats = resource.data.orEmpty()
+                        chats = resource.data.orEmpty(),
+                        refreshState = state.value.refreshState.apply {
+                            isRefreshing = false
+                        }
                     )
                 }
             }
         }.launchIn(viewModelScope)
+    }
+
+    // Refresh
+    private fun refresh() = viewModelScope.launch {
+        _refresh.send(Refresh.FORCE)
     }
 }

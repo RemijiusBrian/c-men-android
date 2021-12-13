@@ -7,6 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.chatmen.c_men.core.data.util.Resource
 import com.chatmen.c_men.core.domain.util.Refresh
 import com.chatmen.c_men.core.presentation.util.BasicUiEvent
+import com.chatmen.c_men.core.presentation.util.UiEvent
+import com.chatmen.c_men.core.presentation.util.UiText
 import com.chatmen.c_men.feature_members.domain.use_case.MembersUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -50,6 +52,9 @@ class MembersViewModel @Inject constructor(
             is MembersEvent.MemberClick -> {
                 onMemberClick(event.member)
             }
+            MembersEvent.Refresh -> {
+                refresh()
+            }
         }
     }
 
@@ -60,21 +65,28 @@ class MembersViewModel @Inject constructor(
         }.onEach { resource ->
             when (resource) {
                 is Resource.Error -> {
+                    _events.send(UiEvent.ShowSnackbar(resource.message ?: UiText.unknownError()))
                     _state.value = state.value.copy(
-                        isLoading = false,
-                        members = useCases.groupMembers(resource.data)
+                        members = useCases.groupMembers(resource.data),
+                        refreshState = state.value.refreshState.apply {
+                            isRefreshing = false
+                        }
                     )
                 }
                 is Resource.Loading -> {
                     _state.value = state.value.copy(
-                        isLoading = true,
-                        members = useCases.groupMembers(resource.data)
+                        members = useCases.groupMembers(resource.data),
+                        refreshState = state.value.refreshState.apply {
+                            isRefreshing = true
+                        }
                     )
                 }
                 is Resource.Success -> {
                     _state.value = state.value.copy(
-                        isLoading = false,
-                        members = useCases.groupMembers(resource.data)
+                        members = useCases.groupMembers(resource.data),
+                        refreshState = state.value.refreshState.apply {
+                            isRefreshing = false
+                        }
                     )
                 }
             }
@@ -84,5 +96,10 @@ class MembersViewModel @Inject constructor(
     // On Member Click
     private fun onMemberClick(memberUsername: String) = viewModelScope.launch {
 
+    }
+
+    // Refresh
+    private fun refresh() = viewModelScope.launch {
+        _refresh.send(Refresh.FORCE)
     }
 }

@@ -1,6 +1,6 @@
 package com.chatmen.c_men.feature_chat.domain.model
 
-import chatmen.cmen.GetAllMessagesForChat
+import chatmen.cmen.MessageEntity
 import com.chatmen.c_men.core.util.FormatUtil
 
 data class Message(
@@ -12,8 +12,8 @@ data class Message(
     val isOwnMessage: Boolean
 )
 
-fun GetAllMessagesForChat.toMessage(): Message = Message(
-    fromMember = name,
+fun MessageEntity.toMessage(): Message = Message(
+    fromMember = fromUsername,
     text = text,
     timestamp = FormatUtil.formatTimestamp(timestamp),
     chatId = chatId,

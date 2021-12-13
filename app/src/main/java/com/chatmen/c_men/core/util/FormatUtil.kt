@@ -6,5 +6,5 @@ import java.util.*
 object FormatUtil {
 
     fun formatTimestamp(timestamp: Long): String =
-        SimpleDateFormat.getDateTimeInstance().format(Date(timestamp))
+        SimpleDateFormat.getDateInstance().format(Date(timestamp))
 }

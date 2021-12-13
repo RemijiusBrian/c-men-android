@@ -1,7 +1,7 @@
 package com.chatmen.c_men.feature_chat.data.local
 
 import chatmen.cmen.ChatEntitiy
-import chatmen.cmen.GetAllMessagesForChat
+import chatmen.cmen.MessageEntity
 import kotlinx.coroutines.flow.Flow
 
 interface ChatDataSource {
@@ -23,7 +23,7 @@ interface ChatDataSource {
 
     suspend fun deleteAllChats()
 
-    fun getAllMessagesForChat(chatId: String): Flow<List<GetAllMessagesForChat>>
+    fun getAllMessagesForChat(chatId: String): Flow<List<MessageEntity>>
 
     suspend fun insertMessage(
         id: String,

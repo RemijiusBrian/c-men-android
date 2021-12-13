@@ -6,17 +6,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.material.Scaffold
+import androidx.compose.material.rememberScaffoldState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import com.chatmen.c_men.core.presentation.util.BasicUiEvent
 import com.chatmen.c_men.core.presentation.util.UiEvent
+import com.chatmen.c_men.core.presentation.util.asString
 import com.chatmen.c_men.feature_members.presentation.members_list.MembersEvent
 import com.chatmen.c_men.feature_members.presentation.members_list.MembersState
+import com.google.accompanist.swiperefresh.SwipeRefresh
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
@@ -28,6 +31,9 @@ fun Members(
     navigate: (String) -> Unit
 ) {
     val events by rememberUpdatedState(newValue = eventsFlow)
+    val scaffoldState = rememberScaffoldState()
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     LaunchedEffect(key1 = Unit) {
         events.collectLatest { event ->
@@ -35,32 +41,48 @@ fun Members(
                 is UiEvent.Navigate -> {
                     navigate(event.destination)
                 }
+                is UiEvent.ShowSnackbar -> {
+                    scope.launch {
+                        scaffoldState.snackbarHostState.showSnackbar(
+                            event.uiText.asString(context)
+                        )
+                    }
+                }
             }
         }
     }
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
+    Scaffold(
+        scaffoldState = scaffoldState
     ) {
-        state.members.forEach { (separator, members) ->
-            item {
-                MemberSeparator(
-                    separator = separator,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                )
-            }
-            items(items = members) { member ->
-                MemberItem(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .animateItemPlacement(),
-                    name = member.name,
-                    bio = member.bio,
-                    profilePictureUrl = member.profilePictureUrl,
-                    onClick = { onEvent(MembersEvent.MemberClick(member.username)) }
-                )
+        SwipeRefresh(
+            state = state.refreshState,
+            onRefresh = { onEvent(MembersEvent.Refresh) }
+        ) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                state.members.forEach { (separator, members) ->
+                    item {
+                        MemberSeparator(
+                            separator = separator,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        )
+                    }
+                    items(items = members) { member ->
+                        MemberItem(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .animateItemPlacement(),
+                            username = member.username,
+                            bio = member.bio,
+                            profilePictureUrl = member.profilePictureUrl,
+                            onClick = { onEvent(MembersEvent.MemberClick(member.username)) }
+                        )
+                    }
+                }
             }
         }
     }

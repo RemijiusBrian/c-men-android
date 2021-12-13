@@ -1,4 +1,4 @@
-package com.chatmen.c_men.feature_chat.presentation.chat_messages.ui
+package com.chatmen.c_men.feature_chat.presentation.messages.ui
 
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text

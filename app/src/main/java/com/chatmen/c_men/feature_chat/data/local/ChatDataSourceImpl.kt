@@ -2,7 +2,7 @@ package com.chatmen.c_men.feature_chat.data.local
 
 import android.content.SharedPreferences
 import chatmen.cmen.ChatEntitiy
-import chatmen.cmen.GetAllMessagesForChat
+import chatmen.cmen.MessageEntity
 import com.chatmen.c_men.CMenDatabase
 import com.chatmen.c_men.core.data.util.dispatcher_provider.DispatcherProvider
 import com.chatmen.c_men.core.util.Constants
@@ -49,7 +49,7 @@ class ChatDataSourceImpl(
         chatQueries.deleteAll()
     }
 
-    override fun getAllMessagesForChat(chatId: String): Flow<List<GetAllMessagesForChat>> {
+    override fun getAllMessagesForChat(chatId: String): Flow<List<MessageEntity>> {
         return messageQueries.getAllMessagesForChat(chatId).asFlow().mapToList()
     }
 

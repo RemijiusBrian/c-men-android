@@ -13,11 +13,16 @@
     <string name="content_error">Error</string>
     <string name="content_new_chat">New Chat</string>
     <string name="content_logo">Logo</string>
+    <string name="content_navigate_back">Navigate Back</string>
+    <string name="content_send_message">Send Message</string>
 
     <!-- Texts -->
     <string name="login">Login</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
+
+    <!-- Hints -->
+    <string name="hint_send_message">C-Men Message</string>
 
     <!-- Error -->
     <string name="error_unknown">An unknown error occurred</string>

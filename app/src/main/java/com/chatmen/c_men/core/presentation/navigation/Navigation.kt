@@ -11,8 +11,8 @@ import com.chatmen.c_men.feature_auth.presentation.login.LoginViewModel
 import com.chatmen.c_men.feature_auth.presentation.login.ui.Login
 import com.chatmen.c_men.feature_auth.presentation.splash_screen.SplashScreenViewModel
 import com.chatmen.c_men.feature_auth.presentation.splash_screen.ui.SplashScreen
-import com.chatmen.c_men.feature_chat.presentation.chat_messages.MessagesViewModel
-import com.chatmen.c_men.feature_chat.presentation.chat_messages.ui.Messages
+import com.chatmen.c_men.feature_chat.presentation.messages.MessagesViewModel
+import com.chatmen.c_men.feature_chat.presentation.messages.ui.Messages
 import com.chatmen.c_men.feature_chat.presentation.chats_list.ChatViewModel
 import com.chatmen.c_men.feature_chat.presentation.chats_list.ui.Chats
 import com.chatmen.c_men.feature_members.presentation.members_list.MembersViewModel
@@ -70,6 +70,7 @@ private fun NavGraphBuilder.loginDestination(navController: NavHostController) {
     }
 }
 
+@ExperimentalMaterialApi
 @ExperimentalAnimationApi
 private fun NavGraphBuilder.chatsDestination(navController: NavHostController) {
     composable(

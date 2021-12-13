@@ -5,7 +5,7 @@ import com.chatmen.c_men.core.util.FormatUtil
 
 data class Chat(
     val id: String,
-    val name: String?,
+    val name: String,
     val description: String?,
     val timestamp: String,
     val chatIconUrl: String?,

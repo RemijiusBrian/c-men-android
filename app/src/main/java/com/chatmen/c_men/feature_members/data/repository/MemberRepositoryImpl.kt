@@ -24,12 +24,11 @@ class MemberRepositoryImpl(
             },
             fetch = { service.getAllMembers() },
             saveFetchResult = { result ->
-                result.forEach { messageDto ->
+                result.forEach { memberDto ->
                     dataSource.insert(
-                        username = messageDto.username,
-                        name = messageDto.name,
-                        bio = messageDto.bio,
-                        profilePictureUrl = messageDto.profilePictureUrl
+                        username = memberDto.username,
+                        bio = memberDto.bio,
+                        profilePictureUrl = memberDto.profilePictureUrl
                     )
                 }
             },

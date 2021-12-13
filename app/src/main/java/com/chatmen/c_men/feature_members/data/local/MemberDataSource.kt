@@ -9,7 +9,6 @@ interface MemberDataSource {
 
     suspend fun insert(
         username: String,
-        name: String,
         bio: String?,
         profilePictureUrl: String?
     )

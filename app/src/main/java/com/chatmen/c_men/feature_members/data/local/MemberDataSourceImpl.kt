@@ -21,11 +21,10 @@ class MemberDataSourceImpl(
 
     override suspend fun insert(
         username: String,
-        name: String,
         bio: String?,
         profilePictureUrl: String?
     ) = withContext(dispatchers.io) {
-        queries.insert(username, name, bio, profilePictureUrl)
+        queries.insert(username, bio, profilePictureUrl)
     }
 
     override suspend fun deleteAll() = withContext(dispatchers.io) {

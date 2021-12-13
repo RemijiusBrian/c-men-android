@@ -1,4 +1,4 @@
-package com.chatmen.c_men.feature_chat.presentation.chat_messages
+package com.chatmen.c_men.feature_chat.presentation.messages
 
 sealed class MessageEvent {
     object InitState : MessageEvent()

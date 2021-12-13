@@ -1,4 +1,4 @@
-package com.chatmen.c_men.feature_chat.presentation.chat_messages
+package com.chatmen.c_men.feature_chat.presentation.messages
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -10,11 +10,8 @@ import com.chatmen.c_men.core.domain.util.Refresh
 import com.chatmen.c_men.core.presentation.navigation.NavArgs
 import com.chatmen.c_men.feature_chat.domain.use_case.MessageUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -34,16 +31,11 @@ class MessagesViewModel @Inject constructor(
         savedStateHandle.set(SavedStateKeys.MESSAGE_INPUT, value)
     }
 
-    // Refresh Trigger
-    private val _refresh = Channel<Refresh>()
-    private val refresh = _refresh.receiveAsFlow()
-
     // Ui State
     private val _state = mutableStateOf(MessageState())
     val state: State<MessageState> = _state
 
     init {
-        viewModelScope.launch { _refresh.send(Refresh.NORMAL) }
         onEvent(MessageEvent.InitState)
     }
 
@@ -64,12 +56,10 @@ class MessagesViewModel @Inject constructor(
 
     // Collect Messages
     private fun collectMessages() {
-        refresh.flatMapLatest { refresh ->
-            useCases.getMessages(
-                chatId = savedStateHandle.get<String>(NavArgs.CHAT_ID).orEmpty(),
-                refresh = refresh
-            )
-        }.onEach { resource ->
+        useCases.getMessages(
+            chatId = savedStateHandle.get<String>(NavArgs.CHAT_ID).orEmpty(),
+            refresh = Refresh.FORCE
+        ).onEach { resource ->
             when (resource) {
                 is Resource.Error -> {
                     _state.value = state.value.copy(
