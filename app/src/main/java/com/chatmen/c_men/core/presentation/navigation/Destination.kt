@@ -12,6 +12,11 @@ sealed class Destination(
     val arguments: List<NamedNavArgument> = emptyList()
 ) {
 
+    object SplashScreen : Destination(
+        route = NavRoutes.SPLASH_SCREEN,
+        titleRes = R.string.destination_splash
+    )
+
     object Login : Destination(
         route = NavRoutes.LOGIN,
         titleRes = R.string.destination_login
@@ -48,6 +53,7 @@ sealed class Destination(
 }
 
 private object NavRoutes {
+    const val SPLASH_SCREEN = "splashScreen"
     const val LOGIN = "login"
     const val CHATS = "chats"
     const val MESSAGES = "messages"

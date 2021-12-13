@@ -3,7 +3,9 @@ package com.chatmen.c_men.feature_chat.domain.repository
 import com.chatmen.c_men.core.data.util.Resource
 import com.chatmen.c_men.core.data.util.SimpleResponse
 import com.chatmen.c_men.feature_chat.data.remote.request.CreateChatRequest
+import com.chatmen.c_men.feature_chat.data.remote.web_socket.WsClientMessage
 import com.chatmen.c_men.feature_chat.domain.model.Chat
+import com.chatmen.c_men.feature_chat.domain.model.Message
 import kotlinx.coroutines.flow.Flow
 
 interface ChatRepository {
@@ -17,4 +19,19 @@ interface ChatRepository {
     suspend fun deleteChatById(id: String)
 
     suspend fun deleteAll()
+
+    fun getAllMessagesForChat(
+        chatId: String,
+        refresh: Boolean,
+        page: Int,
+        pageSize: Int
+    ): Flow<Resource<List<Message>>>
+
+    suspend fun initSession(username: String): SimpleResponse
+
+    suspend fun sendMessage(clientMessage: WsClientMessage)
+
+    suspend fun observeMessages()
+
+    suspend fun closeSession()
 }

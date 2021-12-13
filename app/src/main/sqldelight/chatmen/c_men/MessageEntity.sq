@@ -1,0 +1,29 @@
+CREATE TABLE MessageEntity (
+    id TEXT PRIMARY KEY,
+    fromUsername TEXT NOT NULL,
+    text TEXT NOT NULL,
+    timestamp INTEGER NOT NULL,
+    chatId TEXT NOT NULL,
+    isOwnMessage INTEGER AS Boolean NOT NULL,
+    FOREIGN KEY (chatId) REFERENCES ChatEntitiy(id),
+    FOREIGN KEY (fromUsername) REFERENCES MemberEntity(username),
+    CONSTRAINT check_isOwnMessage CHECK(isOwnMessage = 1 OR isOwnMessage = 0)
+);
+
+getAllMessagesForChat:
+SELECT id, text, timestamp, chatId, name, isOwnMessage
+FROM MessageEntity
+JOIN MemberEntity ON MessageEntity.fromUsername = MemberEntity.username
+WHERE chatId = :chatId
+ORDER BY timestamp DESC;
+
+insert:
+INSERT OR REPLACE
+INTO MessageEntity
+VALUES (?, ?, ?, ?, ?, ?);
+
+deleteById:
+DELETE FROM MessageEntity WHERE id = :id;
+
+deleteAll:
+DELETE FROM MessageEntity;

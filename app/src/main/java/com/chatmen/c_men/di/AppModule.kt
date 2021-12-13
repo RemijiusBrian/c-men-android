@@ -7,6 +7,7 @@ import com.chatmen.c_men.CMenDatabase
 import com.chatmen.c_men.core.data.util.dispatcher_provider.DispatcherProvider
 import com.chatmen.c_men.core.data.util.dispatcher_provider.DispatcherProviderImpl
 import com.chatmen.c_men.core.util.Constants
+import com.google.gson.Gson
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import dagger.Module
 import dagger.Provides
@@ -33,6 +34,10 @@ object AppModule {
 
     @Singleton
     @Provides
+    fun provideGson(): Gson = Gson()
+
+    @Singleton
+    @Provides
     fun provideHttpClient(sharedPreferences: SharedPreferences): HttpClient = HttpClient(CIO) {
         install(Logging) {
             level = LogLevel.ALL
@@ -43,10 +48,8 @@ object AppModule {
                 setPrettyPrinting()
             }
         }
+        install(WebSockets)
 
-        install(WebSockets) {
-
-        }
         defaultRequest {
             contentType(ContentType.Application.Json)
             val token = sharedPreferences.getString(Constants.JWT_TOKEN_KEY, "")

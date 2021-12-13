@@ -9,6 +9,10 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import com.chatmen.c_men.feature_auth.presentation.login.LoginViewModel
 import com.chatmen.c_men.feature_auth.presentation.login.ui.Login
+import com.chatmen.c_men.feature_auth.presentation.splash_screen.SplashScreenViewModel
+import com.chatmen.c_men.feature_auth.presentation.splash_screen.ui.SplashScreen
+import com.chatmen.c_men.feature_chat.presentation.chat_messages.MessagesViewModel
+import com.chatmen.c_men.feature_chat.presentation.chat_messages.ui.Messages
 import com.chatmen.c_men.feature_chat.presentation.chats_list.ChatViewModel
 import com.chatmen.c_men.feature_chat.presentation.chats_list.ui.Chats
 import com.chatmen.c_men.feature_members.presentation.members_list.MembersViewModel
@@ -21,13 +25,32 @@ import com.google.accompanist.navigation.animation.composable
 @ExperimentalAnimationApi
 @Composable
 fun Navigation(navController: NavHostController) {
-    AnimatedNavHost(navController = navController, startDestination = Destination.Login.route) {
+    AnimatedNavHost(
+        navController = navController,
+        startDestination = Destination.SplashScreen.route
+    ) {
+
         // Auth Destinations
+        splashDestination(navController)
         loginDestination(navController)
 
         chatsDestination(navController)
 
         membersDestination(navController)
+
+        messagesDestination(navController)
+    }
+}
+
+@ExperimentalAnimationApi
+private fun NavGraphBuilder.splashDestination(navController: NavHostController) {
+    composable(Destination.SplashScreen.route) {
+        val viewModel: SplashScreenViewModel = hiltViewModel()
+
+        SplashScreen(
+            eventFlow = viewModel.events,
+            navigate = navController::navigate
+        )
     }
 }
 
@@ -81,6 +104,25 @@ private fun NavGraphBuilder.membersDestination(navController: NavHostController)
             onEvent = viewModel::onEvent,
             eventsFlow = viewModel.events,
             navigate = navController::navigate
+        )
+    }
+}
+
+@ExperimentalAnimationApi
+private fun NavGraphBuilder.messagesDestination(navController: NavHostController) {
+    composable(
+        route = Destination.Messages.route,
+        arguments = Destination.Messages.arguments,
+        enterTransition = { NavAnimations.slideInFromLeftWithFadeIn() },
+        popExitTransition = { NavAnimations.slideOutToLeftWithFadeOut() }
+    ) {
+        val viewModel: MessagesViewModel = hiltViewModel()
+
+        Messages(
+            state = viewModel.state.value,
+            messageInput = viewModel.messageInputState.value,
+            onEvent = viewModel::onEvent,
+            navigateUp = navController::popBackStack
         )
     }
 }
