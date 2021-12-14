@@ -12,7 +12,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.chatmen.c_men.core.presentation.components.ProfileIcon
 import com.chatmen.c_men.core.presentation.ui.theme.CMenTheme
-import com.chatmen.c_men.core.presentation.ui.theme.PaddingMedium
 import com.chatmen.c_men.core.presentation.ui.theme.PaddingSmall
 import com.chatmen.c_men.core.presentation.ui.theme.SpaceSmall
 
@@ -34,7 +33,7 @@ fun MemberItem(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .padding(PaddingMedium)
+                .padding(PaddingSmall)
         ) {
             ProfileIcon(
                 iconUrl = profilePictureUrl,

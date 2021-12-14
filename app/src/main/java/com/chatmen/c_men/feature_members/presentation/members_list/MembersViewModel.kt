@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chatmen.c_men.core.data.util.Resource
 import com.chatmen.c_men.core.domain.util.Refresh
+import com.chatmen.c_men.core.presentation.navigation.Destination
 import com.chatmen.c_men.core.presentation.util.BasicUiEvent
 import com.chatmen.c_men.core.presentation.util.UiEvent
 import com.chatmen.c_men.core.presentation.util.UiText
@@ -95,7 +96,7 @@ class MembersViewModel @Inject constructor(
 
     // On Member Click
     private fun onMemberClick(memberUsername: String) = viewModelScope.launch {
-
+        _events.send(UiEvent.Navigate(Destination.Messages.withArgs("-1", memberUsername)))
     }
 
     // Refresh

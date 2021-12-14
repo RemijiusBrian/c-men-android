@@ -5,8 +5,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.chatmen.c_men.core.presentation.ui.theme.PaddingExtraSmall
 import com.chatmen.c_men.core.presentation.ui.theme.PaddingMedium
+import com.chatmen.c_men.core.presentation.ui.theme.PaddingSmall
 
 @Composable
 fun MemberSeparator(
@@ -16,7 +16,8 @@ fun MemberSeparator(
     Text(
         text = separator,
         modifier = modifier
-            .padding(horizontal = PaddingMedium, vertical = PaddingExtraSmall),
+            .padding(horizontal = PaddingMedium)
+            .padding(top = PaddingSmall),
         style = MaterialTheme.typography.body2
     )
 }

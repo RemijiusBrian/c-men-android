@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -36,7 +38,10 @@ fun StandardTextField(
             .clip(shape)
             .background(backgroundColor),
         maxLines = maxLines,
-        singleLine = singleLine
+        singleLine = singleLine,
+        textStyle = LocalTextStyle.current.copy(
+            color = MaterialTheme.colors.onSurface
+        )
     ) { innerTextField ->
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -49,7 +54,12 @@ fun StandardTextField(
             }
             Box {
                 if (value.isEmpty()) {
-                    hint?.let { Text(text = stringResource(id = it)) }
+                    hint?.let {
+                        Text(
+                            text = stringResource(id = it),
+                            color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium)
+                        )
+                    }
                 } else {
                     innerTextField()
                 }

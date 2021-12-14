@@ -1,5 +1,6 @@
 package com.chatmen.c_men.feature_chat.presentation.messages.ui
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,6 +15,7 @@ import com.chatmen.c_men.feature_chat.domain.model.Message
 import com.chatmen.c_men.feature_chat.presentation.messages.MessageEvent
 import com.chatmen.c_men.feature_chat.presentation.messages.MessageState
 
+@ExperimentalFoundationApi
 @Composable
 fun Messages(
     state: MessageState,
@@ -41,7 +43,22 @@ fun Messages(
                 reverseLayout = true
             ) {
                 items(messages) { message ->
-                    OwnMessageItem(text = message.text)
+                    if (message.isOwnMessage) {
+                        OwnMessage(
+                            modifier = Modifier
+                                .animateItemPlacement(),
+                            text = message.text,
+                            timestamp = message.timestamp
+                        )
+                    } else {
+                        RemoteMessage(
+                            modifier = Modifier
+                                .animateItemPlacement(),
+                            remoteUsername = message.fromMember,
+                            text = message.text,
+                            timestamp = message.timestamp
+                        )
+                    }
                 }
             }
             MessageInput(

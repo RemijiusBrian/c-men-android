@@ -51,10 +51,18 @@ class MessagesViewModel @Inject constructor(
     // Send Message
     private fun sendMessage() = viewModelScope.launch {
         useCases.sendMessage(
-            messageInputState.value,
-            savedStateHandle.get<String>(NavArgs.CHAT_ID),
-            members = listOf("DEDM8")
+            message = messageInputState.value,
+            chatId = savedStateHandle.get<String>(NavArgs.CHAT_ID),
+            members = listOf(
+                savedStateHandle.get<String>(NavArgs.CHAT_NAME).orEmpty()
+            )
         )
+        clearMessageInput()
+    }
+
+    // Clear Message Input
+    private fun clearMessageInput() {
+        _messageInputState.value = ""
     }
 
     // Saved State Keys

@@ -12,6 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.chatmen.c_men.R
+import com.chatmen.c_men.core.presentation.components.ProfileIcon
+import com.chatmen.c_men.core.presentation.components.TransparentTopAppBar
 import com.chatmen.c_men.core.presentation.util.BasicUiEvent
 import com.chatmen.c_men.core.presentation.util.UiEvent
 import com.chatmen.c_men.core.presentation.util.asString
@@ -62,7 +64,17 @@ fun Chats(
                 )
             }
         },
-        floatingActionButtonPosition = FabPosition.End
+        floatingActionButtonPosition = FabPosition.End,
+        topBar = {
+            TransparentTopAppBar(
+                title = stringResource(id = R.string.app_name),
+                navigationIcon = {
+                    IconButton(onClick = { }) {
+                        ProfileIcon(contentDescription = "")
+                    }
+                }
+            )
+        }
     ) {
         SwipeRefresh(
             state = state.refreshState,

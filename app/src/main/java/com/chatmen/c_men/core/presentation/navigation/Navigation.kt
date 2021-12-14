@@ -37,11 +37,13 @@ fun Navigation(navController: NavHostController) {
         splashDestination(navController)
         loginDestination(navController)
 
+        // Chat Destinations
         chatsDestination(navController)
+        messagesDestination(navController)
 
+        // Member Destinations
         membersDestination(navController)
 
-        messagesDestination(navController)
     }
 }
 
@@ -52,7 +54,9 @@ private fun NavGraphBuilder.splashDestination(navController: NavHostController) 
 
         SplashScreen(
             eventFlow = viewModel.events,
-            navigate = navController::navigate
+            navigate = { destination ->
+                navController.navigate(destination) { popUpTo(destination) }
+            }
         )
     }
 }
@@ -107,11 +111,13 @@ private fun NavGraphBuilder.membersDestination(navController: NavHostController)
             state = viewModel.state.value,
             onEvent = viewModel::onEvent,
             eventsFlow = viewModel.events,
-            navigate = navController::navigate
+            navigate = navController::navigate,
+            navigateUp = navController::popBackStack
         )
     }
 }
 
+@ExperimentalFoundationApi
 @ExperimentalAnimationApi
 private fun NavGraphBuilder.messagesDestination(navController: NavHostController) {
     composable(

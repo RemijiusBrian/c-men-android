@@ -1,11 +1,9 @@
 package com.chatmen.c_men.core.presentation.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,11 +35,6 @@ fun ProfileIcon(
             .size(32.dp)
             .aspectRatio(1f)
             .clip(CircleShape)
-            .border(
-                width = 1.dp,
-                color = MaterialTheme.colors.onSurface,
-                shape = CircleShape
-            )
             .placeholder(
                 visible = isLoading,
                 shape = CircleShape,

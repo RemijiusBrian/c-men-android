@@ -11,6 +11,10 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import com.chatmen.c_men.core.presentation.components.BackArrowButton
+import com.chatmen.c_men.core.presentation.components.TransparentTopAppBar
+import com.chatmen.c_men.core.presentation.navigation.Destination
 import com.chatmen.c_men.core.presentation.util.BasicUiEvent
 import com.chatmen.c_men.core.presentation.util.UiEvent
 import com.chatmen.c_men.core.presentation.util.asString
@@ -28,7 +32,8 @@ fun Members(
     state: MembersState,
     onEvent: (MembersEvent) -> Unit,
     eventsFlow: Flow<BasicUiEvent>,
-    navigate: (String) -> Unit
+    navigate: (String) -> Unit,
+    navigateUp: () -> Unit
 ) {
     val events by rememberUpdatedState(newValue = eventsFlow)
     val scaffoldState = rememberScaffoldState()
@@ -53,7 +58,14 @@ fun Members(
     }
 
     Scaffold(
-        scaffoldState = scaffoldState
+        scaffoldState = scaffoldState,
+        topBar = {
+            TransparentTopAppBar(
+                title = stringResource(id = Destination.Members.titleRes),
+                navigationIcon = { BackArrowButton(navigateUp) },
+                actions = {}
+            )
+        }
     ) {
         SwipeRefresh(
             state = state.refreshState,
