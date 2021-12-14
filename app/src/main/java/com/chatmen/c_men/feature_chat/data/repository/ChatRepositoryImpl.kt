@@ -140,6 +140,11 @@ class ChatRepositoryImpl(
                                 timestamp = wsServerMessage.timestamp,
                                 chatId = wsServerMessage.chatId
                             )
+
+                            dataSource.updateLastMessageForChat(
+                                lastMessage = wsServerMessage.text,
+                                id = wsServerMessage.chatId
+                            )
                         }
                         else -> Unit
                     }
