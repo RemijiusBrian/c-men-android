@@ -5,13 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.chatmen.c_men.core.data.util.Resource
-import com.chatmen.c_men.core.domain.util.Refresh
 import com.chatmen.c_men.core.presentation.navigation.NavArgs
 import com.chatmen.c_men.feature_chat.domain.use_case.MessageUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -35,16 +31,14 @@ class MessagesViewModel @Inject constructor(
     private val _state = mutableStateOf(MessageState())
     val state: State<MessageState> = _state
 
-    init {
-        onEvent(MessageEvent.InitState)
-    }
+    // Messages
+    val messages = useCases.getMessages(
+        chatId = savedStateHandle.get<String>(NavArgs.CHAT_ID).orEmpty()
+    )
 
     // On Event
     fun onEvent(event: MessageEvent) {
         when (event) {
-            MessageEvent.InitState -> {
-                collectMessages()
-            }
             is MessageEvent.MessageInputChange -> {
                 onMessageChange(event.message)
             }
@@ -54,37 +48,12 @@ class MessagesViewModel @Inject constructor(
         }
     }
 
-    // Collect Messages
-    private fun collectMessages() {
-        useCases.getMessages(
-            chatId = savedStateHandle.get<String>(NavArgs.CHAT_ID).orEmpty(),
-            refresh = Refresh.FORCE
-        ).onEach { resource ->
-            when (resource) {
-                is Resource.Error -> {
-                    _state.value = state.value.copy(
-                        messages = resource.data.orEmpty(),
-                    )
-                }
-                is Resource.Loading -> {
-                    _state.value = state.value.copy(
-                        messages = resource.data.orEmpty(),
-                    )
-                }
-                is Resource.Success -> {
-                    _state.value = state.value.copy(
-                        messages = resource.data.orEmpty(),
-                    )
-                }
-            }
-        }.launchIn(viewModelScope)
-    }
-
     // Send Message
     private fun sendMessage() = viewModelScope.launch {
         useCases.sendMessage(
             messageInputState.value,
-            savedStateHandle.get<String>(NavArgs.CHAT_ID)
+            savedStateHandle.get<String>(NavArgs.CHAT_ID),
+            members = listOf("DEDM8")
         )
     }
 

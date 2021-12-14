@@ -20,18 +20,13 @@ interface ChatRepository {
 
     suspend fun deleteAll()
 
-    fun getAllMessagesForChat(
-        chatId: String,
-        refresh: Boolean,
-        page: Int,
-        pageSize: Int
-    ): Flow<Resource<List<Message>>>
+    fun getAllMessagesForChat(chatId: String): Flow<List<Message>>
 
-    suspend fun initSession(username: String): SimpleResponse
+    suspend fun initSession(): SimpleResponse
 
     suspend fun sendMessage(clientMessage: WsClientMessage)
 
-    suspend fun observeMessages()
+    fun observeMessages()
 
     suspend fun closeSession()
 }

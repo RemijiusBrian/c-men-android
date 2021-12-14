@@ -4,5 +4,5 @@ sealed class ChatEvent {
     object InitState : ChatEvent()
     object NewChatFabClick : ChatEvent()
     object Refresh : ChatEvent()
-    data class ChatClick(val chatId: String) : ChatEvent()
+    data class ChatClick(val chatId: String, val chatName: String) : ChatEvent()
 }

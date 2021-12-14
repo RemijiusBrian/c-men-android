@@ -1,6 +1,7 @@
 package com.chatmen.c_men.feature_chat.data.remote.web_socket
 
 data class WsServerMessage(
+    val messageId: String,
     val fromUsername: String,
     val toUsername: String,
     val text: String,

@@ -17,16 +17,17 @@ import com.chatmen.c_men.feature_chat.domain.model.toChat
 import com.chatmen.c_men.feature_chat.domain.model.toMessage
 import com.chatmen.c_men.feature_chat.domain.repository.ChatRepository
 import com.google.gson.Gson
+import dagger.hilt.android.qualifiers.ApplicationContext
 import io.ktor.http.cio.websocket.*
-import kotlinx.coroutines.channels.consumeEach
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.isActive
 
 class ChatRepositoryImpl(
     private val dataSource: ChatDataSource,
     private val service: ChatService,
-    private val gson: Gson
+    private val gson: Gson,
+    @ApplicationContext private val applicationScope: CoroutineScope
 ) : ChatRepository {
 
     private var socket: WebSocketSession? = null
@@ -88,41 +89,24 @@ class ChatRepositoryImpl(
         dataSource.deleteAllChats()
     }
 
-    override fun getAllMessagesForChat(
-        chatId: String,
-        refresh: Boolean,
-        page: Int,
-        pageSize: Int
-    ): Flow<Resource<List<Message>>> = networkBoundResource(
-        query = {
-            dataSource.getAllMessagesForChat(chatId).map { entities ->
-                entities.map { it.toMessage() }
-            }
-        },
-        fetch = { service.getAllMessagesForChat(chatId, page, pageSize) },
-        saveFetchResult = { result ->
-            result.forEach { messageDto ->
-                dataSource.insertMessage(
-                    id = messageDto.id,
-                    fromUsername = messageDto.fromUsername,
-                    text = messageDto.text,
-                    timestamp = messageDto.timestamp,
-                    chatId = messageDto.chatId
-                )
-            }
-        },
-        shouldFetch = { it.isNullOrEmpty() || refresh }
-    )
+    override fun getAllMessagesForChat(chatId: String): Flow<List<Message>> =
+        dataSource.getAllMessagesForChat(chatId).map { entities ->
+            entities.map { it.toMessage() }
+        }
 
-    override suspend fun initSession(username: String): SimpleResponse = try {
+
+    override suspend fun initSession(): SimpleResponse = try {
         socket = service.getSocketSession()
 
         if (socket?.isActive == true) {
+            println("AppDebug: Successfully Connected to Chat")
             Response.Success(Unit)
         } else {
+            println("AppDebug: Couldn\'t establish connection")
             Response.Error(UiText.StringResource(R.string.error_connection_not_established))
         }
     } catch (t: Throwable) {
+        println("AppDebug: ${t.localizedMessage}")
         Response.Error(
             t.localizedMessage?.let { UiText.Dynamic(it) }
                 ?: UiText.unknownError()
@@ -138,25 +122,28 @@ class ChatRepositoryImpl(
         }
     }
 
-    override suspend fun observeMessages() {
+    override fun observeMessages() {
         try {
-            socket?.incoming?.consumeEach { frame ->
-                when (frame) {
-                    is Frame.Text -> {
-                        val json = frame.readText()
-                        val wsServerMessage = gson.fromJson(json, WsServerMessage::class.java)
+            socket?.incoming
+                ?.consumeAsFlow()
+                ?.filter { it is Frame.Text }
+                ?.onEach { frame ->
+                    when (frame) {
+                        is Frame.Text -> {
+                            val json = frame.readText()
+                            val wsServerMessage = gson.fromJson(json, WsServerMessage::class.java)
 
-                        dataSource.insertMessage(
-                            id = wsServerMessage.chatId,
-                            fromUsername = wsServerMessage.fromUsername,
-                            text = wsServerMessage.text,
-                            timestamp = wsServerMessage.timestamp,
-                            chatId = wsServerMessage.chatId
-                        )
+                            dataSource.insertMessage(
+                                id = wsServerMessage.messageId,
+                                fromUsername = wsServerMessage.fromUsername,
+                                text = wsServerMessage.text,
+                                timestamp = wsServerMessage.timestamp,
+                                chatId = wsServerMessage.chatId
+                            )
+                        }
+                        else -> Unit
                     }
-                    else -> Unit
-                }
-            }
+                }?.launchIn(applicationScope)
         } catch (t: Throwable) {
             t.printStackTrace()
         }
@@ -164,5 +151,7 @@ class ChatRepositoryImpl(
 
     override suspend fun closeSession() {
         socket?.close()
+        println("AppDebug: Disconnected Chat")
     }
 }
+

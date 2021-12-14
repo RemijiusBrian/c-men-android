@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chatmen.c_men.core.data.util.Resource
+import com.chatmen.c_men.core.data.util.Response
 import com.chatmen.c_men.core.domain.util.Refresh
 import com.chatmen.c_men.core.presentation.navigation.Destination
 import com.chatmen.c_men.core.presentation.util.BasicUiEvent
@@ -46,6 +47,7 @@ class ChatViewModel @Inject constructor(
     fun onEvent(event: ChatEvent) {
         when (event) {
             ChatEvent.InitState -> {
+                joinChat()
                 collectChats()
             }
             ChatEvent.NewChatFabClick -> {
@@ -60,7 +62,7 @@ class ChatViewModel @Inject constructor(
                 viewModelScope.launch {
                     _events.send(
                         UiEvent.Navigate(
-                            Destination.Messages.withArgs(event.chatId)
+                            Destination.Messages.withArgs(event.chatId, event.chatName)
                         )
                     )
                 }
@@ -105,8 +107,31 @@ class ChatViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
+    // Join Chat
+    private fun joinChat() = viewModelScope.launch {
+        when (val response = useCases.joinChat()) {
+            is Response.Error -> {
+                _events.send(UiEvent.ShowSnackbar(response.message ?: UiText.unknownError()))
+            }
+            is Response.Success -> {
+                useCases.collectSocketMessages()
+            }
+        }
+    }
+
+    // Disconnect Chat
+    private fun disconnectChat() = viewModelScope.launch {
+        useCases.disconnectChat()
+    }
+
     // Refresh
     private fun refresh() = viewModelScope.launch {
         _refresh.send(Refresh.FORCE)
+    }
+
+
+    override fun onCleared() {
+        super.onCleared()
+        disconnectChat()
     }
 }

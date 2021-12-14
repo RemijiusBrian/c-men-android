@@ -31,10 +31,15 @@ sealed class Destination(
         route = NavRoutes.MESSAGES,
         titleRes = R.string.destination_messages,
         arguments = listOf(
-            navArgument(name = NavArgs.CHAT_ID) {
+            navArgument(NavArgs.CHAT_ID) {
                 type = NavType.StringType
                 nullable = false
                 defaultValue = "-1"
+            },
+            navArgument(NavArgs.CHAT_NAME) {
+                type = NavType.StringType
+                nullable = false
+                defaultValue = "Messages"
             }
         )
     )

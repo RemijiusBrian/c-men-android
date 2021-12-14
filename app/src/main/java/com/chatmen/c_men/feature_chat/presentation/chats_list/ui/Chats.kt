@@ -79,7 +79,7 @@ fun Chats(
                         iconUrl = chat.chatIconUrl,
                         lastMessage = chat.lastMessage,
                         timestamp = chat.timestamp,
-                        onClick = { onEvent(ChatEvent.ChatClick(chat.id)) }
+                        onClick = { onEvent(ChatEvent.ChatClick(chat.id, chat.name)) }
                     )
                 }
             }

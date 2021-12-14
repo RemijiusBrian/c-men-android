@@ -4,6 +4,9 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -112,15 +115,20 @@ private fun NavGraphBuilder.membersDestination(navController: NavHostController)
 @ExperimentalAnimationApi
 private fun NavGraphBuilder.messagesDestination(navController: NavHostController) {
     composable(
-        route = Destination.Messages.route + "/{${NavArgs.CHAT_ID}}",
+        route = Destination.Messages.route + "/{${NavArgs.CHAT_ID}}/{${NavArgs.CHAT_NAME}}",
         arguments = Destination.Messages.arguments,
         enterTransition = { NavAnimations.slideInFromRightWithFadeIn() },
         popExitTransition = { NavAnimations.slideOutToRightWithFadeOut() }
-    ) {
+    ) { navBackStackEntry ->
         val viewModel: MessagesViewModel = hiltViewModel()
+        val messages by viewModel.messages.collectAsState(initial = emptyList())
+        val chatName = navBackStackEntry.arguments?.getString(NavArgs.CHAT_NAME)
+            ?: stringResource(id = Destination.Messages.titleRes)
 
         Messages(
             state = viewModel.state.value,
+            messages = messages,
+            chatName = chatName,
             messageInput = viewModel.messageInputState.value,
             onEvent = viewModel::onEvent,
             navigateUp = navController::popBackStack

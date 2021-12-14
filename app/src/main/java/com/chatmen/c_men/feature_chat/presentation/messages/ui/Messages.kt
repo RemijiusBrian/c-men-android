@@ -10,13 +10,15 @@ import androidx.compose.ui.Modifier
 import com.chatmen.c_men.R
 import com.chatmen.c_men.core.presentation.components.BackArrowButton
 import com.chatmen.c_men.core.presentation.components.TransparentTopAppBar
-import com.chatmen.c_men.core.presentation.navigation.Destination
+import com.chatmen.c_men.feature_chat.domain.model.Message
 import com.chatmen.c_men.feature_chat.presentation.messages.MessageEvent
 import com.chatmen.c_men.feature_chat.presentation.messages.MessageState
 
 @Composable
 fun Messages(
     state: MessageState,
+    messages: List<Message>,
+    chatName: String,
     messageInput: String,
     onEvent: (MessageEvent) -> Unit,
     navigateUp: () -> Unit
@@ -24,7 +26,7 @@ fun Messages(
     Scaffold(
         topBar = {
             TransparentTopAppBar(
-                titleRes = Destination.Messages.titleRes,
+                title = chatName,
                 navigationIcon = { BackArrowButton(onClick = navigateUp) }
             )
         }
@@ -38,7 +40,7 @@ fun Messages(
                     .weight(1f),
                 reverseLayout = true
             ) {
-                items(state.messages) { message ->
+                items(messages) { message ->
                     OwnMessageItem(text = message.text)
                 }
             }

@@ -7,6 +7,7 @@ import com.chatmen.c_men.CMenDatabase
 import com.chatmen.c_men.core.data.util.dispatcher_provider.DispatcherProvider
 import com.chatmen.c_men.core.data.util.dispatcher_provider.DispatcherProviderImpl
 import com.chatmen.c_men.core.util.Constants
+import com.chatmen.c_men.di.qualifiers.ApplicationScope
 import com.google.gson.Gson
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import dagger.Module
@@ -21,11 +22,19 @@ import io.ktor.client.features.logging.*
 import io.ktor.client.features.websocket.*
 import io.ktor.client.request.*
 import io.ktor.http.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+    @ApplicationScope
+    @Singleton
+    @Provides
+    fun provideApplicationScope(): CoroutineScope = CoroutineScope(SupervisorJob())
 
     @Singleton
     @Provides
