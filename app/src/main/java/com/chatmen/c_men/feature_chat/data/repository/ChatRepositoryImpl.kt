@@ -126,7 +126,6 @@ class ChatRepositoryImpl(
         try {
             socket?.incoming
                 ?.consumeAsFlow()
-                ?.filter { it is Frame.Text }
                 ?.onEach { frame ->
                     when (frame) {
                         is Frame.Text -> {
@@ -146,6 +145,9 @@ class ChatRepositoryImpl(
                                 id = wsServerMessage.chatId
                             )
                         }
+                        is Frame.Binary -> {
+                            println("AppDebug: Binary Socket Data - ${frame.readBytes()}")
+                        }
                         else -> Unit
                     }
                 }?.launchIn(applicationScope)
@@ -158,5 +160,7 @@ class ChatRepositoryImpl(
         socket?.close()
         println("AppDebug: Disconnected Chat")
     }
-}
 
+    override suspend fun getChatWithMember(member: String): Chat? =
+        dataSource.getChatWithMember(member)?.toChat()
+}

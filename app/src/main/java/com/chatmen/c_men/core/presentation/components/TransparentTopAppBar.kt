@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun TransparentTopAppBar(
     modifier: Modifier = Modifier,
-    title: String?,
+    title: String? = null,
     navigationIcon: @Composable (() -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {},
 ) {

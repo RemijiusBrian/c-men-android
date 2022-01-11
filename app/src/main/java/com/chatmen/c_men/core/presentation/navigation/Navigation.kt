@@ -6,14 +6,14 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import coil.annotation.ExperimentalCoilApi
 import com.chatmen.c_men.feature_auth.presentation.login.LoginViewModel
 import com.chatmen.c_men.feature_auth.presentation.login.ui.Login
-import com.chatmen.c_men.feature_auth.presentation.splash_screen.SplashScreenViewModel
-import com.chatmen.c_men.feature_auth.presentation.splash_screen.ui.SplashScreen
 import com.chatmen.c_men.feature_chat.presentation.chats_list.ChatViewModel
 import com.chatmen.c_men.feature_chat.presentation.chats_list.ui.Chats
 import com.chatmen.c_men.feature_chat.presentation.messages.MessagesViewModel
@@ -23,6 +23,8 @@ import com.chatmen.c_men.feature_members.presentation.members_list.ui.Members
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 
+@ExperimentalCoilApi
+@ExperimentalComposeUiApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
@@ -30,11 +32,10 @@ import com.google.accompanist.navigation.animation.composable
 fun Navigation(navController: NavHostController) {
     AnimatedNavHost(
         navController = navController,
-        startDestination = Destination.SplashScreen.route
+        startDestination = Destination.Chats.route
     ) {
 
         // Auth Destinations
-        splashDestination(navController)
         loginDestination(navController)
 
         // Chat Destinations
@@ -47,20 +48,7 @@ fun Navigation(navController: NavHostController) {
     }
 }
 
-@ExperimentalAnimationApi
-private fun NavGraphBuilder.splashDestination(navController: NavHostController) {
-    composable(Destination.SplashScreen.route) {
-        val viewModel: SplashScreenViewModel = hiltViewModel()
-
-        SplashScreen(
-            eventFlow = viewModel.events,
-            navigate = { destination ->
-                navController.navigate(destination) { popUpTo(destination) }
-            }
-        )
-    }
-}
-
+@ExperimentalComposeUiApi
 @ExperimentalAnimationApi
 private fun NavGraphBuilder.loginDestination(navController: NavHostController) {
     composable(Destination.Login.route) {
@@ -72,7 +60,8 @@ private fun NavGraphBuilder.loginDestination(navController: NavHostController) {
             passwordState = viewModel.passwordState.value,
             onEvent = viewModel::onEvent,
             eventsFlow = viewModel.events,
-            navigate = navController::navigate
+            navigate = navController::navigate,
+            navigateUp = navController::popBackStack
         )
     }
 }
@@ -91,11 +80,17 @@ private fun NavGraphBuilder.chatsDestination(navController: NavHostController) {
             state = viewModel.state.value,
             onEvent = viewModel::onEvent,
             eventsFlow = viewModel.events,
-            navigate = navController::navigate
+            navigate = navController::navigate,
+            reAuthenticateUser = {
+                navController.navigate(Destination.Login.route) {
+                    popUpTo(Destination.Login.route)
+                }
+            }
         )
     }
 }
 
+@ExperimentalCoilApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
@@ -111,7 +106,11 @@ private fun NavGraphBuilder.membersDestination(navController: NavHostController)
             state = viewModel.state.value,
             onEvent = viewModel::onEvent,
             eventsFlow = viewModel.events,
-            navigate = navController::navigate,
+            navigate = {
+                navController.navigate(it) {
+                    popUpTo(Destination.Chats.route)
+                }
+            },
             navigateUp = navController::popBackStack
         )
     }

@@ -29,4 +29,6 @@ interface ChatRepository {
     fun observeMessages()
 
     suspend fun closeSession()
+
+    suspend fun getChatWithMember(member: String): Chat?
 }

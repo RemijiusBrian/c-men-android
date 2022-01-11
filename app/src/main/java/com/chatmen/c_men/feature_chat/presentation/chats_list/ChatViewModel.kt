@@ -47,7 +47,7 @@ class ChatViewModel @Inject constructor(
     fun onEvent(event: ChatEvent) {
         when (event) {
             ChatEvent.InitState -> {
-                joinChat()
+                // authenticateUser()
                 collectChats()
             }
             ChatEvent.NewChatFabClick -> {
@@ -65,6 +65,11 @@ class ChatViewModel @Inject constructor(
                             Destination.Messages.withArgs(event.chatId, event.chatName)
                         )
                     )
+                }
+            }
+            ChatEvent.AuthenticateAgain -> {
+                viewModelScope.launch {
+                    _events.send(ChatUiEvent.AuthenticateAgain)
                 }
             }
         }
@@ -108,7 +113,7 @@ class ChatViewModel @Inject constructor(
     }
 
     // Join Chat
-    private fun joinChat() = viewModelScope.launch {
+    private suspend fun joinChat() {
         when (val response = useCases.joinChat()) {
             is Response.Error -> {
                 _events.send(UiEvent.ShowSnackbar(response.message ?: UiText.unknownError()))
@@ -129,9 +134,27 @@ class ChatViewModel @Inject constructor(
         _refresh.send(Refresh.FORCE)
     }
 
+    // Authenticate User
+    private fun authenticateUser() = viewModelScope.launch {
+        when (useCases.authenticate()) {
+            is Response.Error -> {
+                _state.value = state.value.copy(
+                    isAuthenticationLostDialogShown = true
+                )
+            }
+            is Response.Success -> {
+                joinChat()
+            }
+        }
+    }
 
+    //
     override fun onCleared() {
         super.onCleared()
         disconnectChat()
+    }
+
+    sealed class ChatUiEvent : BasicUiEvent() {
+        object AuthenticateAgain : ChatUiEvent()
     }
 }

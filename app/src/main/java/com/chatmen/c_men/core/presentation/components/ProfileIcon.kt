@@ -7,39 +7,33 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
-import coil.transform.CircleCropTransformation
-import com.google.accompanist.placeholder.PlaceholderHighlight
-import com.google.accompanist.placeholder.material.fade
-import com.google.accompanist.placeholder.placeholder
+import com.google.accompanist.placeholder.material.placeholder
 
+@ExperimentalCoilApi
 @Composable
 fun ProfileIcon(
     modifier: Modifier = Modifier,
-    iconUrl: String? = null,
     contentDescription: String,
-    isLoading: Boolean = false
+    iconUrl: String? = null,
+    painter: ImagePainter = rememberImagePainter(data = iconUrl),
+    isLoading: Boolean = false,
+    size: Dp = 32.dp
 ) {
+    println("AppDebug: Painter Data - ${painter.request.data}")
     Image(
-        painter = rememberImagePainter(
-            data = iconUrl,
-            builder = {
-                crossfade(true)
-                transformations(CircleCropTransformation())
-            },
-        ),
+        painter = painter,
         contentDescription = contentDescription,
         modifier = modifier
-            .size(32.dp)
+            .size(size)
             .aspectRatio(1f)
             .clip(CircleShape)
             .placeholder(
-                visible = isLoading,
-                shape = CircleShape,
-                color = Color.Transparent,
-                highlight = PlaceholderHighlight.fade()
+                visible = painter.state is ImagePainter.State.Loading
             )
     )
 }

@@ -6,8 +6,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import com.chatmen.c_men.R
 import com.chatmen.c_men.core.domain.states.TextInputState
@@ -22,6 +24,7 @@ import com.chatmen.c_men.feature_auth.presentation.login.LoginEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 
+@ExperimentalComposeUiApi
 @Composable
 fun Login(
     isLoading: Boolean,
@@ -29,19 +32,25 @@ fun Login(
     passwordState: TextInputState,
     onEvent: (LoginEvent) -> Unit,
     eventsFlow: Flow<BasicUiEvent>,
-    navigate: (String) -> Unit
+    navigate: (String) -> Unit,
+    navigateUp: () -> Unit
 ) {
     val events by rememberUpdatedState(newValue = eventsFlow)
     val context = LocalContext.current
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     LaunchedEffect(key1 = Unit) {
         events.collectLatest { event ->
             when (event) {
                 is UiEvent.ShowSnackbar -> {
+                    // TODO: 12/20/2021 Show Snackbar
                 }
 
                 is UiEvent.Navigate -> {
                     navigate(event.destination)
+                }
+                UiEvent.NavigateUp -> {
+                    navigateUp()
                 }
             }
         }
@@ -76,7 +85,10 @@ fun Login(
             )
             Spacer(modifier = Modifier.height(SpaceSmall))
             LoadingIndicatorButton(
-                onClick = { onEvent(LoginEvent.Login) },
+                onClick = {
+                    keyboardController?.hide()
+                    onEvent(LoginEvent.Login)
+                },
                 modifier = Modifier.fillMaxWidth(),
                 text = R.string.login,
                 isLoading = isLoading

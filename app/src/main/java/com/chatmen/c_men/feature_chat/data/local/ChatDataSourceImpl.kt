@@ -77,4 +77,9 @@ class ChatDataSourceImpl(
     override suspend fun deleteAllMessages() = withContext(dispatchers.io) {
         messageQueries.deleteAll()
     }
+
+    override suspend fun getChatWithMember(member: String): ChatEntitiy? =
+        withContext(dispatchers.io) {
+            chatQueries.getChatWithMember(member).executeAsOneOrNull()
+        }
 }

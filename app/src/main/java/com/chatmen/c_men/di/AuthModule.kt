@@ -4,7 +4,7 @@ import android.content.SharedPreferences
 import com.chatmen.c_men.feature_auth.data.remote.AuthService
 import com.chatmen.c_men.feature_auth.data.repository.AuthRepositoryImpl
 import com.chatmen.c_men.feature_auth.domain.repository.AuthRepository
-import com.chatmen.c_men.feature_auth.domain.use_case.AuthenticateUseCase
+import com.chatmen.c_men.feature_auth.domain.use_case.CheckSavedTokenUseCase
 import com.chatmen.c_men.feature_auth.domain.use_case.LoginUseCase
 import dagger.Module
 import dagger.Provides
@@ -30,10 +30,9 @@ object AuthModule {
 
     @Singleton
     @Provides
-    fun providesLoginUseCase(repository: AuthRepository): LoginUseCase = LoginUseCase(repository)
+    fun provideLoginUseCase(repository: AuthRepository): LoginUseCase = LoginUseCase(repository)
 
-    @Singleton
     @Provides
-    fun provideAuthenticateUseCase(repository: AuthRepository): AuthenticateUseCase =
-        AuthenticateUseCase(repository)
+    fun provideCheckSavedTokenUseCase(sharedPreferences: SharedPreferences): CheckSavedTokenUseCase =
+        CheckSavedTokenUseCase(sharedPreferences)
 }

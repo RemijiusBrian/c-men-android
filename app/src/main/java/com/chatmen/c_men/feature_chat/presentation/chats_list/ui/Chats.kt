@@ -1,24 +1,28 @@
 package com.chatmen.c_men.feature_chat.presentation.chats_list.ui
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Chat
+import androidx.compose.material.icons.filled.Chat
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.chatmen.c_men.R
+import com.chatmen.c_men.core.presentation.components.AuthenticationLostDialog
 import com.chatmen.c_men.core.presentation.components.ProfileIcon
 import com.chatmen.c_men.core.presentation.components.TransparentTopAppBar
+import com.chatmen.c_men.core.presentation.ui.theme.PaddingMedium
 import com.chatmen.c_men.core.presentation.util.BasicUiEvent
 import com.chatmen.c_men.core.presentation.util.UiEvent
 import com.chatmen.c_men.core.presentation.util.asString
 import com.chatmen.c_men.feature_chat.presentation.chats_list.ChatEvent
 import com.chatmen.c_men.feature_chat.presentation.chats_list.ChatState
+import com.chatmen.c_men.feature_chat.presentation.chats_list.ChatViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -30,7 +34,8 @@ fun Chats(
     state: ChatState,
     onEvent: (ChatEvent) -> Unit,
     eventsFlow: Flow<BasicUiEvent>,
-    navigate: (String) -> Unit
+    navigate: (String) -> Unit,
+    reAuthenticateUser: () -> Unit
 ) {
     val events by rememberUpdatedState(newValue = eventsFlow)
     val context = LocalContext.current
@@ -50,51 +55,61 @@ fun Chats(
                         )
                     }
                 }
+                ChatViewModel.ChatUiEvent.AuthenticateAgain -> {
+                    reAuthenticateUser()
+                }
             }
         }
     }
-
-    Scaffold(
-        scaffoldState = scaffoldState,
-        floatingActionButton = {
-            FloatingActionButton(onClick = { onEvent(ChatEvent.NewChatFabClick) }) {
-                Icon(
-                    imageVector = Icons.Outlined.Chat,
-                    contentDescription = stringResource(id = R.string.content_new_chat)
-                )
-            }
-        },
-        floatingActionButtonPosition = FabPosition.End,
-        topBar = {
-            TransparentTopAppBar(
-                title = stringResource(id = R.string.app_name),
-                navigationIcon = {
-                    IconButton(onClick = { }) {
-                        ProfileIcon(contentDescription = "")
-                    }
-                }
-            )
-        }
-    ) {
-        SwipeRefresh(
-            state = state.refreshState,
-            onRefresh = { onEvent(ChatEvent.Refresh) }
-        ) {
+    SwipeRefresh(state = state.refreshState, onRefresh = { onEvent(ChatEvent.Refresh) }) {
+        Box(modifier = Modifier.fillMaxSize()) {
             LazyColumn(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxWidth(),
+                contentPadding = PaddingValues(bottom = 80.dp)
             ) {
-                items(items = state.chats) { chat ->
+                item {
+                    TransparentTopAppBar(
+                        navigationIcon = {
+                            IconButton(onClick = { }) {
+                                ProfileIcon(
+                                    contentDescription = "",
+                                    size = 16.dp
+                                )
+                            }
+                        }
+                    )
+                }
+
+                items(state.chats) { chat ->
                     ChatItem(
-                        modifier = Modifier
-                            .fillMaxWidth(),
                         name = chat.name,
                         iconUrl = chat.chatIconUrl,
                         lastMessage = chat.lastMessage,
                         timestamp = chat.timestamp,
-                        onClick = { onEvent(ChatEvent.ChatClick(chat.id, chat.name)) }
+                        onClick = {
+                            onEvent(ChatEvent.ChatClick(chat.id, chat.name))
+                        }
                     )
                 }
             }
+            FloatingActionButton(
+                onClick = { onEvent(ChatEvent.NewChatFabClick) },
+                modifier = Modifier
+                    .padding(PaddingMedium)
+                    .align(Alignment.BottomEnd)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Chat,
+                    contentDescription = stringResource(id = R.string.content_new_chat)
+                )
+            }
         }
+    }
+
+    if (state.isAuthenticationLostDialogShown) {
+        AuthenticationLostDialog(
+            onOKClick = { onEvent(ChatEvent.AuthenticateAgain) }
+        )
     }
 }

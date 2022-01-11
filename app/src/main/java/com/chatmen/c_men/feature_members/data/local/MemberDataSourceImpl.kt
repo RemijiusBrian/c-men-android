@@ -27,6 +27,11 @@ class MemberDataSourceImpl(
         queries.insert(username, bio, profilePictureUrl)
     }
 
+    override suspend fun getProfileForMember(username: String): MemberEntity? =
+        withContext(dispatchers.io) {
+            queries.getMemberByUsername(username).executeAsOneOrNull()
+        }
+
     override suspend fun deleteAll() = withContext(dispatchers.io) {
         queries.deleteAll()
     }

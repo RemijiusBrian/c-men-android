@@ -36,4 +36,6 @@ interface ChatDataSource {
     suspend fun deleteMessageById(id: String)
 
     suspend fun deleteAllMessages()
+
+    suspend fun getChatWithMember(member: String): ChatEntitiy?
 }

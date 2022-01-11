@@ -12,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import coil.annotation.ExperimentalCoilApi
 import com.chatmen.c_men.core.presentation.components.BackArrowButton
 import com.chatmen.c_men.core.presentation.components.TransparentTopAppBar
 import com.chatmen.c_men.core.presentation.navigation.Destination
@@ -25,6 +26,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+@ExperimentalCoilApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
@@ -84,6 +86,7 @@ fun Members(
                         )
                     }
                     items(items = members) { member ->
+                        println("AppDebug: Member Item - $member")
                         MemberItem(
                             modifier = Modifier
                                 .fillMaxWidth()

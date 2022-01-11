@@ -13,5 +13,7 @@ interface MemberDataSource {
         profilePictureUrl: String?
     )
 
+    suspend fun getProfileForMember(username: String): MemberEntity?
+
     suspend fun deleteAll()
 }

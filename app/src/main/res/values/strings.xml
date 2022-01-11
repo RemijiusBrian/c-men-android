@@ -20,6 +20,11 @@
     <string name="login">Login</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
+    <string name="ok">OK</string>
+    <string name="authentication_lost">Authentication Lost</string>
+
+    <!-- Messages -->
+    <string name="msg_authentication_lost">Something went wrong with your account and you are required to login again.</string>
 
     <!-- Hints -->
     <string name="hint_send_message">C-Men Message</string>
@@ -30,4 +35,7 @@
     <string name="error_something_went_wrong">Oops… Something went wrong.</string>
     <string name="error_field_empty">Field cannot be empty</string>
     <string name="error_connection_not_established">Couldn\'t establish connection</string>
+    <string name="error_not_logged_in">Not Logged In</string>
+    <string name="error_couldnt_reach_server">Couldn\'t reach server</string>
+    <string name="oops_something_went_wrong">Oops… Something went wrong!</string>
 </resources>

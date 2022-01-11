@@ -1,7 +1,8 @@
 CREATE TABLE MemberEntity (
     username TEXT PRIMARY KEY,
     bio TEXT,
-    profilePictureUrl TEXT
+    profilePictureUrl TEXT,
+    isOwnProfile INTEGER AS Boolean NOT NULL DEFAULT 0
 );
 
 getAllMembers:
@@ -17,7 +18,7 @@ WHERE username = :username;
 insert:
 INSERT OR REPLACE
 INTO MemberEntity
-VALUES (?, ?, ?);
+VALUES (?, ?, ?, ?);
 
 deleteAll:
 DELETE FROM MemberEntity;

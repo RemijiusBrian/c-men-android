@@ -11,6 +11,11 @@ getAllChats:
 SELECT *
 FROM ChatEntitiy;
 
+getChatWithMember:
+SELECT *
+FROM ChatEntitiy
+WHERE name = :member;
+
 insert:
 INSERT OR REPLACE
 INTO ChatEntitiy

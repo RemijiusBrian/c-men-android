@@ -10,11 +10,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.rememberImagePainter
 import com.chatmen.c_men.core.presentation.components.ProfileIcon
 import com.chatmen.c_men.core.presentation.ui.theme.CMenTheme
 import com.chatmen.c_men.core.presentation.ui.theme.PaddingSmall
 import com.chatmen.c_men.core.presentation.ui.theme.SpaceSmall
 
+@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @Composable
 fun MemberItem(
@@ -38,7 +41,8 @@ fun MemberItem(
             ProfileIcon(
                 iconUrl = profilePictureUrl,
                 contentDescription = username,
-                modifier = Modifier
+                modifier = Modifier,
+                painter = rememberImagePainter(data = profilePictureUrl)
             )
             Spacer(modifier = Modifier.width(SpaceSmall))
             Column(
@@ -60,6 +64,7 @@ fun MemberItem(
     }
 }
 
+@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @Preview(showBackground = true)
 @Composable
@@ -69,7 +74,7 @@ private fun PreviewMemberItem() {
             modifier = Modifier.fillMaxWidth(),
             username = "Ridill",
             bio = "Ridill Bio",
-            profilePictureUrl = "",
+            profilePictureUrl = "http://192.168.1.5:8080/profile_pictures/south_park_avatar.png",
             onClick = {}
         )
     }

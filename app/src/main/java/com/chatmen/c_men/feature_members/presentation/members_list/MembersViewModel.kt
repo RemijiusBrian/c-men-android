@@ -96,7 +96,10 @@ class MembersViewModel @Inject constructor(
 
     // On Member Click
     private fun onMemberClick(memberUsername: String) = viewModelScope.launch {
-        _events.send(UiEvent.Navigate(Destination.Messages.withArgs("-1", memberUsername)))
+        val chat = useCases.getChatWithMember(memberUsername)
+        val chatId = chat?.id ?: "-1"
+        val chatName = chat?.name ?: memberUsername
+        _events.send(UiEvent.Navigate(Destination.Messages.withArgs(chatId, chatName)))
     }
 
     // Refresh

@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chatmen.c_men.core.data.util.Response
 import com.chatmen.c_men.core.domain.states.TextInputState
-import com.chatmen.c_men.core.presentation.navigation.Destination
 import com.chatmen.c_men.core.presentation.util.BasicUiEvent
 import com.chatmen.c_men.core.presentation.util.UiEvent
 import com.chatmen.c_men.core.presentation.util.UiText
@@ -101,7 +100,7 @@ class LoginViewModel @Inject constructor(
                     )
                 }
                 is Response.Success -> {
-                    _events.send(UiEvent.Navigate(Destination.Chats.route))
+                    _events.send(UiEvent.NavigateUp)
                 }
             }
         }

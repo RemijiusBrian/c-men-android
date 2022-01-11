@@ -4,6 +4,8 @@ import android.content.SharedPreferences
 import com.chatmen.c_men.CMenDatabase
 import com.chatmen.c_men.core.data.util.dispatcher_provider.DispatcherProvider
 import com.chatmen.c_men.di.qualifiers.ApplicationScope
+import com.chatmen.c_men.feature_auth.domain.repository.AuthRepository
+import com.chatmen.c_men.feature_auth.domain.use_case.AuthenticateUseCase
 import com.chatmen.c_men.feature_chat.data.local.ChatDataSource
 import com.chatmen.c_men.feature_chat.data.local.ChatDataSourceImpl
 import com.chatmen.c_men.feature_chat.data.remote.ChatService
@@ -46,11 +48,15 @@ object ChatModule {
 
     @Singleton
     @Provides
-    fun provideChatUseCases(repository: ChatRepository): ChatUseCases = ChatUseCases(
+    fun provideChatUseCases(
+        repository: ChatRepository,
+        authRepository: AuthRepository
+    ): ChatUseCases = ChatUseCases(
         getChats = GetChatsUseCase(repository),
         joinChat = JoinChatUseCase(repository),
         disconnectChat = DisconnectChatUseCase(repository),
-        collectSocketMessages = CollectSocketMessagesUseCase(repository)
+        collectSocketMessages = CollectSocketMessagesUseCase(repository),
+        authenticate = AuthenticateUseCase(authRepository)
     )
 
     @Singleton

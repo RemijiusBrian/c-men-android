@@ -6,4 +6,5 @@ import com.google.accompanist.swiperefresh.SwipeRefreshState
 data class ChatState(
     val chats: List<Chat> = emptyList(),
     val refreshState: SwipeRefreshState = SwipeRefreshState(false),
+    val isAuthenticationLostDialogShown: Boolean = false
 )
